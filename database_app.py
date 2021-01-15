@@ -1,6 +1,4 @@
 import psycopg2 as dbapi2
-import os
-import sys
 from user import User
 class Recipe():
     def add_user(conf, users):
