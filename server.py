@@ -104,61 +104,10 @@ def initialize_database():
                         )"""
 
         db_cursor.execute(query)
-def create_tables():
-    """ create tables in the PostgreSQL database"""
-    commands = """CREATE TABLE USERS (
-                                USER_ID SERIAL PRIMARY KEY,
-                                NAME VARCHAR(80) NOT NULL,
-                                SURNAME VARCHAR(80) NOT NULL,
-                                USERNAME VARCHAR(80) NOT NULL,
-                                EMAIL VARCHAR(80) NOT NULL,
-                                PASSWORD VARCHAR(200) NOT NULL
-                                )"""
-    conn = None
-    try:
-        # read the connection parameters
-        params = config()
-        # connect to the PostgreSQL server
-        conn = psycopg2.connect(**params)
-        cur = conn.cursor()
-        # create table one by one
-        for command in commands:
-            cur.execute(command)
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
-        conn.commit()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-# this is for command line testing
-# def get_user(user_id):
-#     password = current_app.config["PASSWORDS"].get(user_id)
-#     user = User(user_id, password) if password else None
-#     if user is not None:
-#         user.is_admin = user.username in current_app.config["ADMIN_USERS"]
-#     return user
 
-# @app.route("/users", methods =['POST','GET'])
-# def users_page():
-#     try:
-#         if request.method == 'POST':
- 
-#             name = request.form.get('name')
-#             surname = request.form.get('surname')
-#             username = request.form.get('username')
-#             password = request.form.get('password')
-                        
-#             return render_template("users.html",name=name,surname=surname,username=username,password=password)
-#     except:
-#         return render_template("users.html",error="Fatal error")
-
-# conn = psycopg2.connect("dbname=suppliers user=postgres password=postgres")
 
 if __name__ =="__main__":
-    create_tables()
+
     connect()
     port = app.config.get("PORT", 5000)
     app.run(host="127.0.0.1", port=port)
