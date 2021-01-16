@@ -1,6 +1,6 @@
 import psycopg2 as dbapi2
 from user import User
-class Recipe():
+class store():
     def add_user(conf, users):
         with dbapi2.connect(conf) as connection:
             cursor = connection.cursor()
@@ -16,9 +16,19 @@ class Recipe():
             for row in cursor:
                 (name, surname, nickname, email, password) = row
                 return User(name, surname, nickname, email, password)
-
-    # def add_resipe(self, conf, recipes):
-    #     with dbapi2.connect(conf) as connection:
-    #         cursor = connection.cursor()
-    #         query = """INSERT INTO RECIPES (NAME, CONTENT, PHOTO) VALUES (%s, %s, %s)"""
-    #         cursor.execute(query,())        
+                
+    def update_password(conf, username, new_password):
+        with dbapi2.connect(conf) as connection:
+            cursor = connection.cursor()
+            query = "UPDATE USERS SET PASSWORD = %s WHERE (NICKNAME = %s)"
+            cursor.execute(query, (new_password, username))
+            connection.commit()    
+            
+    def is_exist(conf, username):
+        with dbapi2.connect(conf) as connection:
+            cursor = connection.cursor()
+            query = "SELECT PASSWORD FROM USERS WHERE NICKNAME = %s"
+            cursor.execute(query, (username,))
+            for row in cursor:
+                (hashed,) = row
+                return hashed

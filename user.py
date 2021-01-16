@@ -1,4 +1,6 @@
 from flask_login import UserMixin, LoginManager
+from passlib.apps import custom_app_context as pwd_context
+
 login_manager = LoginManager()
 
 
@@ -11,6 +13,7 @@ class User(UserMixin):
         self.email = email
         self.is_admin = False
         self.authenticated = True
+
     def get_id(self):
         return self.username
     
@@ -21,5 +24,6 @@ class User(UserMixin):
     def is_active(self):
         return True
 
-
-
+def hashing(password):
+    secret_key = 'helloworld'
+    return pwd_context.encrypt(password)
