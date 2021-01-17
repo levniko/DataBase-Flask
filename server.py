@@ -51,9 +51,9 @@ def login_page():
         return render_template('login.html')
     username = request.form['username']
     password = request.form['password']
-    truepassword = store.is_exist(app.config['dsn'], username)
+    truepassword = store.is_exist(username)
     if truepassword:
-        user = store.get_user(app.config['dsn'], username)
+        user = store.get_user(username)
         if pwd_context.verify(password, truepassword):
             login_user(user)
             return redirect(url_for('home_page'))
@@ -71,7 +71,7 @@ def register_page():
         user = User(request.form['name'], request.form['surname'], request.form['username'], request.form['password'], request.form['email'])
         # if store.is_exist(app.config['dsn'], request.form['username']):
         #     return render_template('register.html', error = "This username is already taken.")
-        store.add_user(app.config['dsn'], user)
+        store.add_user(user)
         return redirect(url_for('login_page'))
 
 @app.route('/initdb')
