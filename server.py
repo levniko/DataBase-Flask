@@ -17,15 +17,15 @@ app = Flask(__name__)
 conn = psycopg2.connect(database="recipe", user = "postgres", password = "1573596248", host = "127.0.0.1", port = "5432")
 
 
-def get_elephantsql_dsn(vcap_services):
-    """Returns the data source name for ElephantSQL."""
-    parsed = json.loads(vcap_services)
-    uri = parsed["elephantsql"][0]["credentials"]["uri"]
-    match = re.match('postgres://(.*?):(.*?)@(.*?)(:(\d+))?/(.*)', uri)
-    user, password, host, _, port, dbname = match.groups()
-    dsn = """user='{}' password='{}' host='{}' port={}
-             dbname='{}'""".format(user, password, host, port, dbname)
-    return dsn
+# def get_elephantsql_dsn(vcap_services):
+#     """Returns the data source name for ElephantSQL."""
+#     parsed = json.loads(vcap_services)
+#     uri = parsed["elephantsql"][0]["credentials"]["uri"]
+#     match = re.match('postgres://(.*?):(.*?)@(.*?)(:(\d+))?/(.*)', uri)
+#     user, password, host, _, port, dbname = match.groups()
+#     dsn = """user='{}' password='{}' host='{}' port={}
+#              dbname='{}'""".format(user, password, host, port, dbname)
+#     return dsn
 
 lm=LoginManager()
 
@@ -49,30 +49,30 @@ def account_page():
 def login_page():
     if request.method == 'GET':
         return render_template('login.html')
-    username = request.form['username']
-    password = request.form['password']
-    truepassword = store.is_exist(username)
-    if truepassword:
-        user = store.get_user(username)
-        if pwd_context.verify(password, truepassword):
-            login_user(user)
-            return redirect(url_for('home_page'))
-        else:
-            return redirect(url_for('login_page'))
+    # username = request.form['username']
+    # password = request.form['password']
+    # truepassword = store.is_exist(username)
+    # if truepassword:
+    #     user = store.get_user(username)
+    #     if pwd_context.verify(password, truepassword):
+    #         login_user(user)
+    #         return redirect(url_for('home_page'))
+    #     else:
+    #         return redirect(url_for('login_page'))
 
-    else:
-        return redirect(url_for('login_page'))
+    # else:
+    #     return redirect(url_for('login_page'))
 
 @app.route("/register",methods=['GET','POST'])
 def register_page():
     if request.method == 'GET':
         return render_template('register.html')
-    elif request.method == 'POST':
-        user = User(request.form['name'], request.form['surname'], request.form['username'], request.form['password'], request.form['email'])
-        # if store.is_exist(app.config['dsn'], request.form['username']):
-        #     return render_template('register.html', error = "This username is already taken.")
-        store.add_user(user)
-        return redirect(url_for('login_page'))
+    # elif request.method == 'POST':
+    #     user = User(request.form['name'], request.form['surname'], request.form['username'], request.form['password'], request.form['email'])
+    #     # if store.is_exist(app.config['dsn'], request.form['username']):
+    #     #     return render_template('register.html', error = "This username is already taken.")
+    #     store.add_user(user)
+    #     return redirect(url_for('login_page'))
 
 @app.route('/initdb')
 def initialize_database():
